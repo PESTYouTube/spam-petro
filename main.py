@@ -2,7 +2,13 @@ from itertools import count
 import pytz
 import subprocess
 import sys
+import sys
+import importlib.util
 
+# Загружаем ваш файл как модуль
+spec = importlib.util.spec_from_file_location("weather", "путь_к_вашему_файлу.py")
+weather_module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(weather_module)
 try:
     from bs4 import BeautifulSoup as BS
 except ModuleNotFoundError:
@@ -64,11 +70,15 @@ async def hello_message(update: Update, context):
 async def parsing_telega_message(update: Update, context):
     keyboard = get_main_keyboard()
 
+    importlib.reload(weather_module)
 
-    parser = ParsTemp()
-
-
-    weather = parser.parsing_temp(parser.times,parser.tempes,parser.all_dates,parser.clouds)
+    # Теперь используем ваши функции
+    weather = weather_module.parsing_temp(
+        weather_module.times,
+        weather_module.tempes,
+        weather_module.all_dates,
+        weather_module.clouds
+    )
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
         text=f"🌤 *Прогноз погоды:*\n\n{weather}",
