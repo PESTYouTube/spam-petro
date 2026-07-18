@@ -6,7 +6,8 @@ import sys
 import importlib.util
 
 # Загружаем ваш файл как модуль
-spec = importlib.util.spec_from_file_location("weather", "путь_к_вашему_файлу.py")
+# Строка 9:
+spec = importlib.util.spec_from_file_location("weather", "ParsTemp.py")
 weather_module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(weather_module)
 try:
